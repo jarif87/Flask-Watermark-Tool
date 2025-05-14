@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watermarking App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+</head>
+<body class="text-gray-200">
+    <nav class="bg-transparent py-6">
+        <div class="container mx-auto flex justify-between items-center px-6">
+            <h1 class="text-2xl font-bold">Watermarking App</h1>
+            <p>Made by Sadik Al Jarif</p>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-6 py-10">
+        <div class="flex flex-col lg:flex-row gap-8">
+            <div class="lg:w-1/2 form-container">
+                <h2 class="text-xl font-semibold mb-6 text-center">Add Watermark to Your Image</h2>
+                <form id="watermark-form" action="/" method="post" enctype="multipart/form-data" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Upload Image to Watermark</label>
+                        <label class="custom-file-upload">
+                            <span>Browse</span>
+                            <input type="file" name="image_upload" id="image_upload" accept="image/*" required>
+                        </label>
+                        <span id="image-name" class="ml-4 text-gray-400"></span>
+                    </div>
+
+                    <div id="imagebox">
+                        <label class="block text-sm font-medium mb-2">Upload Logo for Watermark</label>
+                        <label class="custom-file-upload">
+                            <span>Browse</span>
+                            <input type="file" name="logo_upload" id="logo_upload" accept="image/*">
+                        </label>
+                        <span id="logo-name" class="ml-4 text-gray-400"></span>
+                    </div>
+
+                    <div id="textboxes" class="hidden">
+                        <label class="block text-sm font-medium mb-2">Text to Watermark</label>
+                        <input type="text" name="text_mark" id="text_mark" placeholder="Enter watermark text" class="w-full p-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:border-blue-500">
+                    </div>
+
+                    <div class="flex justify-center gap-6">
+                        <label class="flex items-center">
+                            <input type="radio" name="options" value="logo_watermark" id="logo_watermark" checked class="mr-2">
+                            <span>Logo Watermark</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="options" value="text_watermark" id="text_watermark" class="mr-2">
+                            <span>Text Watermark</span>
+                        </label>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-full transition duration-300">Apply Watermark</button>
+                    </div>
+                </form>
+
+                <div id="loading-spinner" class="text-center mt-4">
+                    <svg class="animate-spin h-8 w-8 text-blue-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                    </svg>
+                </div>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert mt-4 p-4 rounded {% if category == 'success' %}bg-green-500{% else %}bg-red-500{% endif %} text-white text-center">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+
+            <div class="lg:w-1/2 text-center">
+                <h3 class="text-lg font-medium mb-4">Preview</h3>
+                {% if full_filename %}
+                    <img src="{{ url_for('static', filename=full_filename) }}" alt="Preview" class="image-preview rounded-lg shadow-lg max-w-full h-auto">
+                {% else %}
+                    <p class="text-gray-400">Upload an image to see the preview</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $('#image_upload').on('change', function() {
+            $('#image-name').text(this.files[0].name);
+        });
+
+        $('#logo_upload').on('change', function() {
+            $('#logo-name').text(this.files[0].name);
+        });
+
+        $('input[name="options"]').on('change', function() {
+            if ($('#logo_watermark').is(':checked')) {
+                $('#imagebox').show();
+                $('#textboxes').hide();
+            } else {
+                $('#imagebox').hide();
+                $('#textboxes').show();
+            }
+        });
+
+        $('#watermark-form').on('submit', function() {
+            $('#loading-spinner').show();
+        });
+    </script>
+</body>
+</html>

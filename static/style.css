@@ -1,0 +1,46 @@
+body {
+    background: linear-gradient(to right, #6b7280, #1f2937);
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+}
+
+.form-container {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.image-preview {
+    transition: transform 0.3s ease;
+}
+
+.image-preview:hover {
+    transform: scale(1.05);
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.custom-file-upload {
+    background-color: #5e72e4;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.custom-file-upload:hover {
+    background-color: #4b5ac8;
+}
+
+#loading-spinner {
+    display: none;
+}
+
+.alert {
+    transition: opacity 0.5s ease;
+}
